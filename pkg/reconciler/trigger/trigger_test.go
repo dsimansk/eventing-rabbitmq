@@ -774,7 +774,7 @@ func TestReconcile(t *testing.T) {
 						WithInitTriggerConditions,
 						WithDependencyAnnotation(dependencyAnnotation),
 						WithTriggerBrokerReady(),
-						WithTriggerDependencyUnknown("GenerationNotEqual", fmt.Sprintf("The dependency's metadata.generation, %q, is not equal to its status.observedGeneration, %q.", currentGeneration, outdatedGeneration))),
+						WithTriggerDependencyUnknown("GenerationNotEqual", fmt.Sprintf("The dependency's metadata.generation, %d, is not equal to its status.observedGeneration, %d.", currentGeneration, outdatedGeneration))),
 				}},
 			}, {
 				Name: fmt.Sprintf("%s: Malformed dependency annotation", name),
