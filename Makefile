@@ -100,7 +100,7 @@ releases-ko:
 	$(OPEN) $(KO_RELEASES)
 
 KIND_RELEASES := https://github.com/kubernetes-sigs/kind/releases
-KIND_VERSION := 0.31.0
+KIND_VERSION := 0.32.0
 KIND_URL := $(KIND_RELEASES)/download/v$(KIND_VERSION)/kind-$(platform)-$(arch_alt)
 KIND := $(LOCAL_BIN)/kind_$(KIND_VERSION)_$(platform)_$(arch_alt)
 $(KIND): | $(CURL) $(LOCAL_BIN)
@@ -136,7 +136,7 @@ releases-envsubst:
 
 KUBECTL_RELEASES := https://github.com/kubernetes/kubernetes/tags
 # Keep this in sync with KIND_K8S_VERSION
-KUBECTL_VERSION := v1.34.4
+KUBECTL_VERSION := v1.35.5
 KUBECTL_BIN := kubectl-$(KUBECTL_VERSION)-$(platform)-$(arch_alt)
 KUBECTL_URL := https://dl.k8s.io/release/$(KUBECTL_VERSION)/bin/$(platform)/amd64/kubectl
 KUBECTL := $(LOCAL_BIN)/$(KUBECTL_BIN)
@@ -287,11 +287,11 @@ KO_DOCKER_REPO := kind.local
 envrc::
 	@echo 'export KO_DOCKER_REPO="$(KO_DOCKER_REPO)"'
 export KO_DOCKER_REPO
-MIN_SUPPORTED_K8S_VERSION := 1.34.4
+MIN_SUPPORTED_K8S_VERSION := 1.35.5
 KIND_K8S_VERSION ?= $(MIN_SUPPORTED_K8S_VERSION)
 export KIND_K8S_VERSION
 # Find the corresponding version digest in https://github.com/kubernetes-sigs/kind/releases
-KIND_K8S_DIGEST ?= sha256:08497ee19eace7b4b5348db5c6a1591d7752b164530a36f855cb0f2bdcbadd48
+KIND_K8S_DIGEST ?= sha256:ce977ae6d65918d0b58a5f8b5e940429c2ce42fa3a5619ec2bbc60b949c0ac95
 export KIND_K8S_DIGEST
 
 .PHONY: kind-cluster
