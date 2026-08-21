@@ -256,7 +256,7 @@ envrc:: bash-autocomplete
 
 .PHONY: go-dep-update
 go-dep-update: ## Update any Go dependency
-	@printf "Update dep in go.mod by running e.g. $(BOLD)go get -d github.com/rabbitmq/messaging-topology-operator@v1.12.0$(NORMAL)\n" \
+	@printf "Update dep in go.mod by running e.g. $(BOLD)go get -d github.com/rabbitmq/messaging-topology-operator@v1.19.1$(NORMAL)\n" \
 	; read -rp " (press any key when done)" -n 1
 	$(CURDIR)/hack/update-deps.sh
 	$(CURDIR)/hack/update-codegen.sh
@@ -318,7 +318,7 @@ install-rabbitmq-cluster-operator: | $(KUBECONFIG) $(KUBECTL) ## Install RabbitM
 # https://github.com/jetstack/cert-manager/releases
 # ⚠️  You may want to keep this in sync with RABBITMQ_TOPOLOGY_OPERATOR_VERSION
 # In other words, don't upgrade cert-manager to a version that was released AFTER RABBITMQ_TOPOLOGY_OPERATOR_VERSION
-CERT_MANAGER_VERSION ?= 1.12.2
+CERT_MANAGER_VERSION ?= 1.20.3
 .PHONY: install-cert-manager
 install-cert-manager: | $(KUBECONFIG) $(KUBECTL) ## Install Cert Manager - dependency of RabbitMQ Topology Operator
 	$(KUBECTL) $(K_CMD) --filename \
@@ -326,13 +326,15 @@ install-cert-manager: | $(KUBECONFIG) $(KUBECTL) ## Install Cert Manager - depen
 	$(KUBECTL) wait --for=condition=available deploy/cert-manager-webhook --timeout=60s --namespace $(CERT_MANAGER_NAMESPACE)
 
 # https://github.com/rabbitmq/messaging-topology-operator/releases
-RABBITMQ_TOPOLOGY_OPERATOR_VERSION ?= 1.12.0
+RABBITMQ_TOPOLOGY_OPERATOR_VERSION ?= 1.19.1
 .PHONY: install-rabbitmq-topology-operator
 install-rabbitmq-topology-operator: | install-cert-manager $(KUBECTL) ## Install RabbitMQ Topology Operator
 	$(KUBECTL) $(K_CMD) --filename \
 		https://github.com/rabbitmq/messaging-topology-operator/releases/download/v$(RABBITMQ_TOPOLOGY_OPERATOR_VERSION)/messaging-topology-operator-with-certmanager.yaml
 
-KNATIVE_EVENTING_VERSION ?= 1.15.0
+# Overridable en bloc via KNATIVE_VERSION (as CI does), or individually per component.
+KNATIVE_VERSION ?= 1.23.0
+KNATIVE_EVENTING_VERSION ?= $(KNATIVE_VERSION)
 EVENTING_CRDS ?= https://github.com/knative/eventing/releases/download/knative-v$(KNATIVE_EVENTING_VERSION)/eventing-crds.yaml
 EVENTING_CORE ?= https://github.com/knative/eventing/releases/download/knative-v$(KNATIVE_EVENTING_VERSION)/eventing-core.yaml
 
@@ -341,7 +343,7 @@ EVENTING_CRDS = ./third_party/eventing-latest/eventing-crds.yaml
 EVENTING_CORE = ./third_party/eventing-latest/eventing-core.yaml
 endif
 
-KNATIVE_SERVING_VERSION ?= 1.15.0
+KNATIVE_SERVING_VERSION ?= $(KNATIVE_VERSION)
 # https://github.com/knative/serving/releases
 .PHONY: install-knative-serving
 install-knative-serving: | $(KUBECONFIG) $(KUBECTL) ## Install Knative Serving
